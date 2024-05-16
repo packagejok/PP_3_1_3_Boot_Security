@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
 
     private final UserDao userDao;
 
@@ -34,20 +34,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        //return userDao.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     @Override
     public User getUser(long id) {
-        return userDao.getUser(id);
+        //return userDao.getUser(id);
+        return userRepository.getById(id);
     }
 
     @Override
     public User deleteUser(long id) {
-        User user = null;
+        /*User user = null;
         try {
             user = userDao.deleteUser(id);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return user;*/
+        User user = null;
+        try {
+            userRepository.deleteById(id);
+            user = null;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -55,18 +65,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void createUser(User user) { userDao.createUser(user); }
-
+    public void createUser(User user) {
+        /*userDao.createUser(user);*/
+        userRepository.save(user);
+    }
     @Override
     public void updateUser(User user) {
-        userDao.updateUser(user);
+        /*userDao.updateUser(user);*/
+        userRepository.save(user);
     }
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    @Override
+    /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username);
         if(null == user) {
@@ -74,5 +87,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 user.getAuthorities());
-    }
+    }*/
 }

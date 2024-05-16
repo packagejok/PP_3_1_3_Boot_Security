@@ -19,7 +19,7 @@
                    th:each="role : ${allRoles}"
                    th:text="${role.name}"
                    th:value="${role.id}"
-                   th:checked="${user.getAuthorities()}"
+                   th:checked="${user.getRoles()}"
             />
         </label>
     </p>

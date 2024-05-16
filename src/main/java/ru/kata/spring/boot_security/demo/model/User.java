@@ -2,17 +2,15 @@ package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User/* implements UserDetails*/ {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +19,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -59,7 +57,15 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    /*@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
@@ -93,7 +99,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
+*/
     @Override
     public String toString() {
         return "User{" +
